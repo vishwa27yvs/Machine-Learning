@@ -1,0 +1,64 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf500
+{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red0\green0\blue233;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c0\c0\c93333;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sl280\partightenfactor0
+
+\f0\fs24 \cf2 \expnd0\expndtw0\kerning0
+import numpy as np\
+import matplotlib.pyplot as plt\
+def plot_confusion_matrix(y_true, y_pred, classes,\
+                          normalize=False,\
+                          title=None,\
+                          cmap=plt.cm.Blues):\
+    """\
+    This function prints and plots the confusion matrix.\
+    Normalization can be applied by setting `normalize=True`.\
+    """\
+    if not title:\
+        if normalize:\
+            title = 'Normalized confusion matrix'\
+        else:\
+            title = 'Confusion matrix, without normalization'\
+\
+    # Compute confusion matrix\
+    cm = {\field{\*\fldinst{HYPERLINK "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix"}}{\fldrslt \cf3 \ul \ulc3 confusion_matrix}}(y_true, y_pred)\
+    # Only use the labels that appear in the data\
+    classes = classes[{\field{\*\fldinst{HYPERLINK "https://scikit-learn.org/stable/modules/generated/sklearn.utils.multiclass.unique_labels.html#sklearn.utils.multiclass.unique_labels"}}{\fldrslt \cf3 \ul \ulc3 unique_labels}}(y_true, y_pred)]\
+    if normalize:\
+        cm = cm.astype('float') / cm.sum(axis=1)[:, {\field{\*\fldinst{HYPERLINK "https://docs.scipy.org/doc/numpy/reference/constants.html#numpy.newaxis"}}{\fldrslt \cf3 \ul \ulc3 np.newaxis}}]\
+        print("Normalized confusion matrix")\
+    else:\
+        print('Confusion matrix, without normalization')\
+\
+    print(cm)\
+\
+    fig, ax = {\field{\*\fldinst{HYPERLINK "https://matplotlib.org/api/_as_gen/matplotlib.pyplot.subplots.html#matplotlib.pyplot.subplots"}}{\fldrslt \cf3 \ul \ulc3 plt.subplots}}()\
+    im = ax.imshow(cm, interpolation='nearest', cmap=cmap)\
+    ax.figure.colorbar(im, ax=ax)\
+    # We want to show all ticks...\
+    ax.set(xticks={\field{\*\fldinst{HYPERLINK "https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange"}}{\fldrslt \cf3 \ul \ulc3 np.arange}}(cm.shape[1]),\
+           yticks={\field{\*\fldinst{HYPERLINK "https://docs.scipy.org/doc/numpy/reference/generated/numpy.arange.html#numpy.arange"}}{\fldrslt \cf3 \ul \ulc3 np.arange}}(cm.shape[0]),\
+           # ... and label them with the respective list entries\
+           xticklabels=classes, yticklabels=classes,\
+           title=title,\
+           ylabel='True label',\
+           xlabel='Predicted label')\
+\
+    # Rotate the tick labels and set their alignment.\
+    {\field{\*\fldinst{HYPERLINK "https://matplotlib.org/api/_as_gen/matplotlib.pyplot.setp.html#matplotlib.pyplot.setp"}}{\fldrslt \cf3 \ul \ulc3 plt.setp}}(ax.get_xticklabels(), rotation=45, ha="right",\
+             rotation_mode="anchor")\
+\
+    # Loop over data dimensions and create text annotations.\
+    fmt = '.2f' if normalize else 'd'\
+    thresh = cm.max() / 2.\
+    for i in range(cm.shape[0]):\
+        for j in range(cm.shape[1]):\
+            ax.text(j, i, format(cm[i, j], fmt),\
+                    ha="center", va="center",\
+                    color="white" if cm[i, j] > thresh else "black")\
+    fig.tight_layout()\
+    return ax\
+}
